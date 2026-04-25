@@ -1,8 +1,6 @@
 const asyncHandler = require('express-async-handler')
 const Recipe = require('../models/recipeModel')
 
-// @desc Seed sample recipes
-// @route POST /api/recipes/seed
 const seedRecipes = asyncHandler(async (req, res) => {
   const sample = [
     { title: 'Tacos de papa', description: 'Ricos tacos con papa', ingredients: ['papas','tortilla','aceite'], instructions: 'Freir y montar' },
@@ -14,8 +12,6 @@ const seedRecipes = asyncHandler(async (req, res) => {
   res.status(201).json(created)
 })
 
-// @desc Get recipes
-// @route GET /api/recipes
 const getRecipes = asyncHandler(async (req, res) => {
   const recipes = await Recipe.find()
   res.json(recipes)

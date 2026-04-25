@@ -1,9 +1,8 @@
 const asyncHandler = require('express-async-handler')
 const User = require('../models/userModel')
 
-// Check admin by x-user-key header === '1'
 const requireAdmin = asyncHandler(async (req, res, next) => {
-  const key = req.header('x-user-key')
+  const key = req.header('x-user-key') || req.query['x-user-key'] || (req.body && (req.body['x-user-key'] || req.body.key))
   if (String(key) === '1') {
     next()
   } else {
@@ -12,9 +11,8 @@ const requireAdmin = asyncHandler(async (req, res, next) => {
   }
 })
 
-// Optional middleware to attach user from x-user-id header
 const attachUser = asyncHandler(async (req, res, next) => {
-  const id = req.header('x-user-id')
+  const id = req.header('x-user-id') || req.query['x-user-id'] || (req.body && (req.body['x-user-id'] || req.body.userId))
   if (id) {
     const user = await User.findById(id)
     if (user) req.user = user
