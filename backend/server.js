@@ -1,6 +1,7 @@
 const express = require('express')
 const colors = require('colors')
-const dotenv= require('dotenv').config()
+const dotenv = require('dotenv')
+dotenv.config({ path: __dirname + '/.env' })
 const connectDB = require('./config/db')
 const port = process.env.PORT || 5000
 const {errorHandler} = require('./middleware/errorMiddleware')
@@ -23,6 +24,9 @@ app.use(cors())
 app.use(express.json())
 
 app.use('/api/gastos', require('./routes/gastosRoutes'))
+app.use('/api/users', require('./routes/usersRoutes'))
+app.use('/api/recipes', require('./routes/recipesRoutes'))
+app.use('/api/reviews', require('./routes/reviewsRoutes'))
 
 app.use(errorHandler)
 

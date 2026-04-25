@@ -1,0 +1,151 @@
+Instrucciones para Postman - BackendDelFinal
+
+Usa el host local: http://localhost:5000
+
+1) Seed de recetas
+- Método: POST
+- URL: http://localhost:5000/api/recipes/seed
+- Headers: Ninguno
+- Body: Ninguno
+- Respuesta esperada (200/201):
+[
+  {
+    "title": "Tacos de papa",
+    "description": "Ricos tacos con papa",
+    "ingredients": ["papas","tortilla","aceite"],
+    "instructions": "Freir y montar",
+    "numReviews": 0,
+    "rating": 0,
+    "_id": "<objectId>",
+    "createdAt": "<fecha>",
+    "updatedAt": "<fecha>"
+  },
+  {"title":"Ensalada fresca", ...},
+  {"title":"Sopa instant", ...}
+]
+
+2) Listar recetas
+- Método: GET
+- URL: http://localhost:5000/api/recipes
+- Headers: Ninguno
+- Respuesta esperada (200): Array con las 3 recetas, cada una con `_id`, `title`, `description`, `ingredients`, `instructions`, `numReviews`, `rating`.
+
+3) Crear usuario (admin)
+- Método: POST
+- URL: http://localhost:5000/api/users
+- Headers:
+  - Content-Type: application/json
+- Body (raw JSON):
+{
+  "name": "Admin",
+  "email": "admin@ex.com",
+  "key": "1"
+}
+- Respuesta esperada (201):
+{
+  "name": "Admin",
+  "email": "admin@ex.com",
+  "key": "1",
+  "isAdmin": true,
+  "_id": "<userId>",
+  "createdAt": "<fecha>",
+  "updatedAt": "<fecha>"
+}
+
+4) Crear usuario normal
+- Método: POST
+- URL: http://localhost:5000/api/users
+- Headers:
+  - Content-Type: application/json
+- Body:
+{
+  "name": "User",
+  "email": "user@ex.com",
+  "key": "0"
+}
+- Respuesta esperada (201): similar al anterior con `isAdmin: false` y `_id` distinto.
+
+5) Crear review
+- Método: POST
+- URL: http://localhost:5000/api/reviews
+- Headers:
+  - Content-Type: application/json
+- Body (usar los IDs devueltos por los pasos anteriores):
+{
+  "userId": "<userId>",
+  "recipeId": "<recipeId>",
+  "rating": 5,
+  "comment": "Muy buena receta"
+}
+- Respuesta esperada (201):
+{
+  "user": "<userId>",
+  "recipe": "<recipeId>",
+  "rating": 5,
+  "comment": "Muy buena receta",
+  "_id": "<reviewId>",
+  "createdAt": "<fecha>",
+  "updatedAt": "<fecha>"
+}
+
+6) Listar reviews
+- Método: GET
+- URL: http://localhost:5000/api/reviews
+- Headers: Ninguno
+- Respuesta esperada (200): array de reviews pobladas con `user` (name,email) y `recipe` (title).
+
+7) Borrar review (ADMIN)
+- Método: DELETE
+- URL: http://localhost:5000/api/reviews/<reviewId>
+- Headers:
+  - x-user-key: 1   (esto indica que la petición la hace un admin)
+- Respuesta esperada (200): { "message": "Review deleted" }
+
+---
+Sugerencias para capturas Postman (qué capturar):
+- Request + Headers + Body para cada POST (mostrar JSON enviado)
+- Response status + Response Body para cada petición
+- Para DELETE, mostrar el header `x-user-key: 1` y la respuesta
+
+Lista de contenidos que debe tener tu documento PDF (recomendado):
+- Portada: título, nombre, materia, fecha
+- URL del repositorio GitHub público: https://github.com/M-A-M-huac/BackendDelFinal-AHORASI
+- URL de despliegue (Render/Cyclic) una vez subido
+- Variables de entorno usadas (ejemplo): `MONGO_URI`, `PORT`, `NODE_ENV` (oculta la contraseña si prefieres; en este caso la DB usa usuario/password 1234)
+- Tabla de endpoints: método, ruta, descripción, parámetros/headers
+- Capturas de Postman: para cada endpoint prueba, incluye request (headers+body) y response (status+body)
+- Resultado de pruebas: explicación breve de lo que se verificó (crear usuario admin, crear review, borrar review como admin)
+- Observaciones: cómo autenticar (x-user-key/x-user-id), cómo sembrar recetas
+- Instrucciones para reproducir localmente (comandos para instalar y ejecutar)
+
+Opciones y comandos sugeridos para limpiar el repo remoto y subir tus cambios
+
+IMPORTANTE: Ejecuta estos comandos desde tu máquina y asegúrate de tener configurado `git` y/o `gh` (GitHub CLI) con permisos sobre el repo.
+
+1) (Opción A) Borrar el repo remoto desde GitHub (usando GitHub CLI):
+# Reemplaza owner/repo por el repo real
+gh repo delete M-A-M-huac/BackendDelFinal-AHORASI --confirm
+
+2) (Opción B) Borrar todo el contenido remoto y forzar push de este proyecto (no elimina el repo, sólo su contenido):
+git remote add origin https://github.com/M-A-M-huac/BackendDelFinal-AHORASI.git
+git branch -M main
+git add .
+git commit -m "Init backend final"
+# Forzar push y sobrescribir historial remoto
+git push -u origin main --force
+
+3) (Si prefieres crear un nuevo repo y subirlo):
+# Crea repo en GitHub (puedes hacerlo desde la web o con gh)
+gh repo create BackendDelFinal-AHORASI --public --source=. --remote=origin --push
+
+Notas de seguridad y advertencias
+- `--force` sobreescribe el historial remoto: úsalo sólo si estás seguro.
+- `gh repo delete` borrará el repo permanentemente.
+
+---
+Si quieres, puedo:
+- Generar automáticamente el PDF con las capturas (necesitaría que me proveas las imágenes o que yo ejecute las mismas peticiones y genere fakes), o
+- Preparar y ejecutar los comandos `git`/`gh` localmente (pero necesitaré que confirmes y tengas `gh` configurado), o
+- Simplemente crear un commit y dejar los comandos listos para que los ejecutes.
+
+Indica qué prefieres y procedo.
