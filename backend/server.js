@@ -20,11 +20,6 @@ app.use('/api/users', require('./routes/usersRoutes'))
 app.use('/api/recipes', require('./routes/recipesRoutes'))
 app.use('/api/reviews', require('./routes/reviewsRoutes'))
 app.use('/api/external', require('./routes/externalRoutes'))
-if (process.env.NODE_ENV === 'production') {
-	const distPath = path.join(__dirname, '..', 'FRONTNED', 'MasValeProbar', 'dist')
-	app.use(express.static(distPath))
-	app.get('*', (req, res) => res.sendFile(path.join(distPath, 'index.html')))
-}
 
 app.use(errorHandler)
 
