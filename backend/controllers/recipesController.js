@@ -17,4 +17,20 @@ const getRecipes = asyncHandler(async (req, res) => {
   res.json(recipes)
 })
 
-module.exports = { seedRecipes, getRecipes }
+const createRecipe = asyncHandler(async (req, res) => {
+  const { title, description, ingredients, instructions } = req.body
+  if (!title) {
+    res.status(400)
+    throw new Error('Title required')
+  }
+
+  const exists = await Recipe.findOne({ title })
+  if (exists) {
+    return res.status(200).json(exists)
+  }
+
+  const recipe = await Recipe.create({ title, description, ingredients, instructions })
+  res.status(201).json(recipe)
+})
+
+module.exports = { seedRecipes, getRecipes, createRecipe }
